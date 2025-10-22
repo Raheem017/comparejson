@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
@@ -24,7 +22,6 @@ export default function JsonComparator() {
 
   // Flatten JSON (works for arrays too)
   const flattenJSON = (obj, path = "") => {
-    // ... (Your original flattenJSON function remains here)
     if (typeof obj !== "object" || obj === null) {
       return { [path]: obj };
     }
@@ -48,7 +45,6 @@ export default function JsonComparator() {
 
   // Compare flattened JSONs
   const compareFlat = (flat1, flat2) => {
-    // ... (Your original compareFlat function remains here)
     const match = new Set();
     const diff = new Set();
 
@@ -68,10 +64,9 @@ export default function JsonComparator() {
     return { match, diff };
   };
 
-  // **FIX 1: Robust Array Index Counting for Array Highlighting**
   const countObjectStart = (text, position) => {
     let count = 0;
-    
+
     // We start counting array elements only after finding the "records": [
     const recordsStart = text.indexOf('"records": [');
     if (recordsStart === -1) return 0;
@@ -82,7 +77,7 @@ export default function JsonComparator() {
         while (j > recordsStart && /\s/.test(text[j])) {
           j--; // Skip whitespace
         }
-        
+
         if (text[j] === "[" || text[j] === ",") {
           count++;
         }
@@ -97,7 +92,7 @@ export default function JsonComparator() {
   const findPositions = (text, key) => {
     const parts = key.split(".");
     const lastKey = parts.slice(-1)[0];
-    const arrayIndexMatch = key.match(/\[(\d+)\]/); 
+    const arrayIndexMatch = key.match(/\[(\d+)\]/);
     const targetIndex = arrayIndexMatch
       ? parseInt(arrayIndexMatch[1], 10)
       : null;
@@ -145,7 +140,7 @@ export default function JsonComparator() {
 
       const deco = matchSet.has(key)
         ? Decoration.mark({
-            attributes: { style: "background-color: #E6FFFA; color: black;" }, // ✨ Mint Green
+            attributes: { style: "background-color: #B2F5EA; color: black;" }, // ✨ Mint Green
           })
         : diffSet.has(key)
         ? Decoration.mark({
@@ -166,7 +161,6 @@ export default function JsonComparator() {
 
     return builder.finish();
   };
-
 
   // Handle Compare click
   const handleCompare = () => {
@@ -196,15 +190,13 @@ export default function JsonComparator() {
 
   return (
     <div className="min-h-screen bg-[#fff] flex flex-col items-center justify-center p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-700">
-        🧩 JSON Comparator
-      </h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-700">🧩 JSON Compare</h1>
 
       <div className="flex flex-wrap gap-6 justify-center w-full max-w-6xl">
         {/* Left JSON Editor */}
         <div className="flex-1 min-w-[350px] border rounded-2xl overflow-hidden shadow-sm">
           <CodeMirror
-            key={"editor1-" + result} 
+            key={"editor1-" + result}
             value={json1}
             height="400px"
             placeholder={"Enter JSON 1"}
@@ -232,14 +224,13 @@ export default function JsonComparator() {
         {/* Right JSON Editor */}
         <div className="flex-1 min-w-[350px] border rounded-2xl overflow-hidden shadow-sm">
           <CodeMirror
-            key={"editor2-" + result} // ✅ forces re-render for highlights
+            key={"editor2-" + result}
             value={json2}
             height="400px"
             placeholder={"Enter JSON 2"}
             extensions={[json(), decorationExtension(decorations2)]}
             onChange={(value) => {
               setJson2(value);
-              // **FIX 2: RangeError Fix**
               if (value.trim() === "") {
                 setDecorations2(Decoration.none);
               }
