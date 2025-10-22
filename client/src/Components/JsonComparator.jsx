@@ -189,8 +189,8 @@ export default function JsonComparator() {
     EditorView.decorations.of(decorations);
 
   return (
-    <div className="min-h-screen bg-[#fff] flex flex-col items-center justify-center p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-700">🧩 JSON Compare</h1>
+    <div className="min-h-screen bg-[#fff] flex flex-col items-center justify-start p-6 pt-20">
+      <h1 className="mt-4 md:mt-6 text-xl md:text-2xl font-bold mb-6 text-gray-700 text-center md:text-left ">🧩 JSON Compare</h1>
 
       <div className="flex flex-wrap gap-6 justify-center w-full max-w-6xl">
         {/* Left JSON Editor */}
@@ -203,7 +203,6 @@ export default function JsonComparator() {
             extensions={[json(), decorationExtension(decorations1)]}
             onChange={(value) => {
               setJson1(value);
-              // **FIX 2: RangeError Fix**
               if (value.trim() === "") {
                 setDecorations1(Decoration.none);
               }
@@ -245,5 +244,6 @@ export default function JsonComparator() {
         {result}
       </div>
     </div>
+    
   );
 }
